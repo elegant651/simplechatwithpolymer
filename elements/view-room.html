@@ -1,0 +1,157 @@
+<dom-module id="view-room">
+	<style>
+		.chatWrapper {
+			height: 100%;
+			background-color: #f1f1f1;
+		}
+
+		.debugBar {
+			width: 100%;
+			height: 40px;
+			@apply(--layout-horizontal);
+			@apply(--layout-center-justified);
+			background: rgb(258,68,19);
+		}
+
+		.debugBar button {
+			cursor: pointer;
+		}
+
+		.chatList {
+			overflow-y: scroll;
+			padding-bottom: 15px; 
+		}
+
+		iron-list {			
+			height: 100%;
+		}
+
+	</style>
+	<template>
+		<div class="chatWrapper layout vertical fit">
+			<div class="debugBar">		
+				<content select="[paper-drawer-toggle]"></content>		
+				<button id="btnAddUser" on-tap="testAddUser">AddUser</button>
+				<button id="btnRemoveUser" on-tap="testRemoveUser">RemoveUser</button>
+				<button id="btnSendMsg" on-tap="testSendMsg">SendMessageFromUser</button>
+				<button id="btnAddRandMsg" on-tap="testAddRandMsg">Add 100 Random Msg</button>
+			</div>
+
+			<div class="chatList flex">				
+				<iron-list id="ilist" items="[[messages]]" as="msg">
+					<template>	
+						<chat-msg class="chatmsg" username="[[msg.username]]" avatar="[[msg.avatar]]" msg="[[msg.content]]" timestamp="[[msg.timestamp]]" iscommonmsg="[[msg.isCommonMsg]]"></chat-msg>
+					</template>
+				</iron-list>				
+			</div>
+			<div class="sendBox layout horizontal">
+				<paper-input id="piMsg" class="flex" label="Message..." value="{{input}}" on-keyup="checkKey"></paper-input>
+          		<paper-fab icon="icons:send" id="btnSend" on-tap="sendMessageForInput"></paper-fab>
+			</div>			
+		</div>
+	</template>
+</dom-module>
+<script>
+	Polymer({
+		is: 'view-room',		
+
+		properties: {
+			messages: {
+				type: Array				
+			},
+
+			users: {
+				type: Array,
+				notify: true
+			}
+					
+		},
+
+		ready: function() {
+			this.users = [
+				{username: "User1", avatar: "../images/avatar_1.png"},
+				{username: "User2", avatar: "../images/avatar_2.png"},
+				{username: "User3", avatar: "../images/avatar_3.png"},
+				{username: "User4", avatar: "../images/avatar_4.png"}				
+			];
+
+			this.messages = [
+				{username: "User1", avatar: "../images/avatar_1.png", content: "Hi, nice to meet you guys lol", timestamp: "10 minutes ago", isCommonMsg: false},
+				{username: "User2", avatar: "../images/avatar_2.png", content: "Hi, nice to meet you guys lol", timestamp: "3 minutes ago", isCommonMsg: false},
+				{username: "User3", avatar: "../images/avatar_3.png", content: "Hi, nice to meet you guys lol", timestamp: "a minute ago", isCommonMsg: false},
+				{username: "User4", avatar: "../images/avatar_4.png", content: "Hi, nice to meet you guys lol", timestamp: "now", isCommonMsg: false}
+			];
+		},
+		
+		checkKey: function(e) {			
+			if(e.keyCode==13) {
+				this.sendMessageForInput();
+			}
+		},
+
+		sendMessageForInput: function() {
+			var msg = this.$.piMsg.value;			
+			if(msg!=null && msg!=""){
+				var userdata = {username: "Will", avatar: "../images/avatar_0.png"};
+				this.sendMessage(msg, userdata)
+			}			
+		},
+
+		sendMessage: function(content, userdata) {	
+			var data = {content: content, timestamp: "now"};
+			for (var key in userdata) {
+		  		data[key] = userdata[key];
+		 	}					
+			this.push("messages", data);				
+
+			this.$.piMsg.value = "";
+			this.moveScrollBottom();
+		},
+
+		sendNotiMessage: function(content) {
+			var notiMsg = {username: "", avatar: "", content: content, timestamp: "now", isCommonMsg: true};
+			this.push("messages", notiMsg);
+
+			this.moveScrollBottom();
+		},
+
+		moveScrollBottom: function() {			
+			this.$.ilist.scrollToIndex(this.messages.length-1);
+		},		
+
+		/* for testing */
+		testAddUser: function() {
+			var randIdx = Math.floor(Math.random() * 100);
+			var newUser = {username: "NewUser"+randIdx, avatar: "../images/avatar_5.png"};			
+			this.push("users", newUser);
+			
+			this.sendNotiMessage(newUser.username + " joined!");			
+		},
+
+		testRemoveUser: function() {
+			if(this.users.length>0){				
+				var user = this.pop("users");
+				this.sendNotiMessage(user.username + " leaved!");			
+			} else {
+				alert("no user in the room");
+			}	
+		},
+
+		testSendMsg: function() {
+			if(this.users.length>0){
+				var useridx = Math.floor(Math.random() * (this.users.length-1));				
+				var user = this.users[useridx];
+				var content = "Hello, this is test send message.";
+				this.sendMessage(content, user);
+			} else {
+				alert("no user in the room");
+			}			
+		},
+
+		testAddRandMsg: function() {
+			for(var i=0; i<100; i++){
+				this.testSendMsg();
+			}
+		}
+	});
+</script>

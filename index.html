@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Rgames Chat Room</title>
+    <base href="/"></base>
+    <link rel="stylesheet" href="styles/main.css">
+
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>       
+    <script src="bower_components/page/page.js"></script>             
+    <link rel="import" href="elements/elements.html">   
+  </head>
+  <body unresolved class="fullbleed layout vertical">
+
+  	<template is="dom-bind" id="app">
+
+  		<paper-drawer-panel id="paperDrawerPanel" drawer-width="240px">
+  			<div id="drawerWrap" drawer>
+  				<div id="drawerHeader">
+  					<span>Rgames Chat</span>
+  				</div>
+
+  				<div id="drawerList" class="list flex">
+  					<a href="/list">
+  						<span>List Chats</span>
+  					</a>
+
+  					<hr />
+
+  					<a href="/room">
+  						<span>Current Chat</span>
+  					</a>
+
+  					<hr />
+
+  					<list-users users="[[users]]"></list-users>
+  				</div>
+  			</div>
+  			<paper-header-panel id="headerPanel" main mode="standard">  				
+		        <paper-toolbar id="mainToolbar">
+		          <paper-icon-button id="paperToggle" style="color: #fff" icon="menu" paper-drawer-toggle></paper-icon-button>		          
+		        </paper-toolbar>                               
+
+  				<div class="content layout vertical">
+          			<iron-pages attr-for-selected="data-route" selected="[[route]]">
+          				<section data-route="list">
+          					<list-room></list-room>
+          				</section>
+
+          				<section data-route="room">
+          					<view-room users="{{users}}">
+          						<paper-icon-button id="paperToggle" style="color: #fff" icon="menu" paper-drawer-toggle></paper-icon-button>		          
+          					</view-room>
+          				</section>
+          			</iron-pages>
+          		</div>
+  			</paper-header-panel>
+  		</paper-drawer-panel>
+
+    </template>
+    <script src="scripts/app.js"></script>
+  </body>
+</html>
