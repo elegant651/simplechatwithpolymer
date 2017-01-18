@@ -34,7 +34,7 @@
 	</style>
 	<template>
 		<div class="vertical-section">			
-			<h3>Users List</h3>
+			<h3>Users List ( [[numUsers]] )</h3>
 			
 			<div class="myprofile">
 				<div class="myWrapper list-element layout horizontal">
@@ -60,8 +60,22 @@
 
 		properties: {
 			users: {
-				type: Array
-			}
-		}
+				type: Array				
+			},
+
+			numUsers: {
+				type: Number,
+				value: 0
+			}			
+		},
+
+		observers: [
+			'usersChanged(users.splices)'
+		],
+
+		usersChanged: function(change) {
+			this.numUsers = this.users.length;			
+		}		
+							
 	});
 </script>

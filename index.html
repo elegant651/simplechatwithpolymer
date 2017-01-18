@@ -23,13 +23,13 @@
 
   				<div id="drawerList" class="list flex">
   					<a href="/list">
-  						<span>List Chats</span>
+  						<span>List Chats ></span>
   					</a>
 
   					<hr />
 
   					<a href="/room">
-  						<span>Current Chat</span>
+  						<span>Current Chat ></span>
   					</a>
 
   					<hr />
@@ -37,15 +37,13 @@
   					<list-users users="[[users]]"></list-users>
   				</div>
   			</div>
-  			<paper-header-panel id="headerPanel" main mode="standard">  				
-		        <paper-toolbar id="mainToolbar">
-		          <paper-icon-button id="paperToggle" style="color: #fff" icon="menu" paper-drawer-toggle></paper-icon-button>		          
-		        </paper-toolbar>                               
-
+  			<paper-header-panel id="headerPanel" main mode="standard">          
   				<div class="content layout vertical">
           			<iron-pages attr-for-selected="data-route" selected="[[route]]">
           				<section data-route="list">
-          					<list-room></list-room>
+          					<list-room>
+          						<paper-icon-button id="paperToggle" style="color: #fff" icon="menu" paper-drawer-toggle></paper-icon-button>		       
+          					</list-room>
           				</section>
 
           				<section data-route="room">
